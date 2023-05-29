@@ -37,10 +37,10 @@ all_record_main=main_sheet.get_all_records()
 main_df=pd.DataFrame(all_record_main)
 url_list=list(main_df['URL'])
 def process_url(url):
-    return stock_details(url)
+    return Stockfinance(url)
 if __name__ == '__main__': 
     pool = multiprocessing.Pool()
-    results = pool.map(process_url, url_list[0:100])
+    results = pool.map(process_url, url_list[0:50])
     pool.close()
     pool.join()
     result_df = pd.concat(results, ignore_index=True)
