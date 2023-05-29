@@ -40,7 +40,7 @@ def process_url(url):
     return Stockfinance(url)
 if __name__ == '__main__': 
     pool = multiprocessing.Pool()
-    results = pool.map(process_url, url_list[0:50])
+    results = pool.map(process_url, url_list)
     pool.close()
     pool.join()
     result_df = pd.concat(results, ignore_index=True)
