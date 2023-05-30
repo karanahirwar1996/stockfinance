@@ -18,13 +18,14 @@ def Stockfinance(url):
         return None
     json_data = json.loads(script_tag.string)
     security_info = json_data['props']['pageProps'].get('securityInfo', None)
+    if security_info is None:
+        print(f"No security info found for {url}")
+        return None
     isin = security_info.get('isin', None)
     finance = json_data['props']['pageProps'].get('securitySummary', {}).get('financialSummary', {}).get('fiscalYearToData', None)
-
     if finance is None:
         print(f"No financial summary found for {url}")
         return None
-
     df = pd.DataFrame(finance)
     df['ASIN'] = isin
     df['Growth Rate'] = round(((df['revenue'] - df['revenue'].shift(1)) / df['revenue'].shift(1)) * 100, 2)
@@ -48,6 +49,9 @@ def process_url(url):
         return Stockfinance(url)
     except KeyError as e:
         print(f"KeyError encountered for {url}: {str(e)}")
+        return None
+    except Exception as e:
+        print(f"Error encountered for {url}: {str(e)}")
         return None
 
 
