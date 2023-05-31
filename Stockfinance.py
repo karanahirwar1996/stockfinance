@@ -74,6 +74,10 @@ if __name__ == '__main__':
         float_columns = ['revenue', 'profit', 'Growth Rate', 'Profit Growth Rate']
         result_df[float_columns] = result_df[float_columns].astype(float)
 
+        # Handle out of range and NaN values
+        result_df = result_df.replace([float('inf'), float('-inf')], float('nan'))
+        result_df = result_df.fillna('')
+
         gsnew = client.open('AllStockData')
         main_sheet = gsnew.worksheet('Finance')
         main_sheet.clear()
