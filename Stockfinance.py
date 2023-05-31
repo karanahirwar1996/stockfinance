@@ -31,7 +31,13 @@ def Stockfinance(url):
     df['Growth Rate'] = round(((df['revenue'] - df['revenue'].shift(1)) / df['revenue'].shift(1)) * 100, 2)
     df['Profit Growth Rate'] = round(((df['profit'] - df['profit'].shift(1)) / df['profit'].shift(1)) * 100, 2)
     sorted_df = df[['ASIN', 'year', 'revenue', 'profit', 'Growth Rate', 'Profit Growth Rate']].copy()
+
+    # Round float columns to 2 decimal places
+    float_columns = ['revenue', 'profit', 'Growth Rate', 'Profit Growth Rate']
+    sorted_df[float_columns] = sorted_df[float_columns].round(2)
+
     return sorted_df
+
 
 # Configure Google Sheets API
 scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
