@@ -32,9 +32,9 @@ def Stockfinance(url):
     df['Profit Growth Rate'] = round(((df['profit'] - df['profit'].shift(1)) / df['profit'].shift(1)) * 100, 2)
     sorted_df = df[['ASIN', 'year', 'revenue', 'profit', 'Growth Rate', 'Profit Growth Rate']].copy()
 
-    # Round float columns to 2 decimal places
+    # Convert float columns to string format
     float_columns = ['revenue', 'profit', 'Growth Rate', 'Profit Growth Rate']
-    sorted_df[float_columns] = sorted_df[float_columns].round(2)
+    sorted_df[float_columns] = sorted_df[float_columns].astype(str)
 
     return sorted_df
 
@@ -69,9 +69,19 @@ if __name__ == '__main__':
     valid_results = [result for result in results if result is not None]
     if valid_results:
         result_df = pd.concat(valid_results, ignore_index=True)
+
+        # Convert float columns back to float format
+        float_columns = ['revenue', 'profit', 'Growth Rate', 'Profit Growth Rate']
+        result_df[float_columns] = result_df[float_columns].astype(float)
+
         gsnew = client.open('AllStockData')
         main_sheet = gsnew.worksheet('Finance')
         main_sheet.clear()
-        main_sheet.update([result_df.columns.values.tolist()]+result_df.values.tolist())
+
+        # Convert the DataFrame to a list of lists
+        values = [result_df.columns.values.tolist()] + result_df.values.tolist()
+
+        # Update the worksheet with the new values
+        main_sheet.update(values)
     else:
         print("No valid results found.")
