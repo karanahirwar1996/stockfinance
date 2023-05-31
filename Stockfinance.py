@@ -72,6 +72,6 @@ if __name__ == '__main__':
         gsnew = client.open('AllStockData')
         main_sheet = gsnew.worksheet('Finance')
         main_sheet.clear()
-        set_with_dataframe(main_sheet, result_df)
+        main_sheet.update([result_df.columns.values.tolist()]+result_df.values.tolist())
     else:
         print("No valid results found.")
